@@ -1,0 +1,37 @@
+<html>
+<head>
+    <title>SocketIO Test</title>
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/socket.io/1.5.1/socket.io.js"></script>
+    <script type="text/javascript" charset="utf-8">
+    var socket = io.connect('/', {
+	"reconnectionDelayMax": 10000,
+	"reconnectionAttempts": 10
+    });
+
+    socket.on('connect', function() {
+        $('#log').append('<br>' + $('<div/>').text('connected!').html());
+    });
+
+    $(document).ready(function() {
+        $('form#emit').submit(function(event) {
+            socket.emit('client_event', {data: $('#message').val()});
+            return false;
+        });
+    	socket.on('server_response', function(msg) {
+    	    $('#log').append('<br>' + $('<div/>').text('Received from server: ' + msg.data).html());
+    	});
+
+    });
+    
+    </script>   
+</head>
+<body>
+    <h2>SokectIO Test</h2>
+    <form id="emit" method="POST" action='#'>
+        <input type="text" name="message" id="message" placeholder="Message">
+        <input type="submit" value="Echo">
+    </form>
+    <div id='log'></div>
+</body>
+</html>
